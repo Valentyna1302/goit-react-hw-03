@@ -2,6 +2,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useId } from "react";
 import s from "./ContactForm.module.css";
+import { nanoid } from "nanoid";
 
 const ContactSchema = Yup.object().shape({
   name: Yup.string()
@@ -11,7 +12,7 @@ const ContactSchema = Yup.object().shape({
   number: Yup.string()
     .matches(/^\+?\d+$/, "Invalid format")
     .min(3, "Too Short!")
-    .max(50, "Too Long!")
+    .max(16, "Too Long!")
     .required("Required"),
 });
 
@@ -20,13 +21,19 @@ const initialValues = {
   number: "",
 };
 
-const ContactForm = () => {
+const ContactForm = ({ onAdd }) => {
   const nameFieldId = useId();
   const numberFieldId = useId();
 
   const handleSubmit = (values, actions) => {
-    console.log(values.name);
-    console.log(values.number);
+    onAdd({
+      id: nanoid(),
+      name: values.name,
+      number: values.number,
+    });
+
+    // console.log(values.name);
+    // console.log(values.number);
 
     actions.resetForm();
   };
